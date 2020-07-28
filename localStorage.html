@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="content">
+        <h2><p>TRAVEL MORE</p></h2>
+
+        <ul class="list">
+            <li>Destinations Loading...</li>
+        </ul>
+        <hr> 
+        <form class="form">
+            
+            <input type="text" id='item'></input>
+            <button>Ekle</button>
+
+        </form>
+    </div>
+</body>
+<style>
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url('20190701_161153.jpg');
+        background-size: cover;
+        text-align: center;
+        font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    }
+    .content{
+
+        background-color: rgba(255, 255, 255, 0.6);
+        border: 2px solid rgba(128, 128, 128, 0.4);
+    }
+    .content{
+        width: 400px;
+        padding: 20px;
+
+    }
+    .list{
+        padding: 20px;
+        text-align: left;
+        list-style: none;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        background-color: rgba(255, 255, 255);
+        border: 2px solid rgba(128, 128, 128, 0.4);
+    }
+    .list li{
+        display: flex;
+        align-items: center;
+    }
+    .list input{
+        border: 1px solid rgba(128, 128, 128, 0.4);
+    }
+    .list label{
+        padding-left: 10px;
+    }
+    input{
+        border: none;
+        height: 30px;
+    }
+    button{
+        background-color: gray;
+        color: white;
+        border: none;
+        width: 100px;
+        height: 30px;
+    }
+</style>
+<script>
+    const list=document.querySelector('.list');
+    const form=document.querySelector('.form');
+    const input=document.querySelector('#item');
+    const items= JSON.parse(localStorage.getItem('items')) || [];
+    form.addEventListener('submit',submitForm);
+    list.addEventListener('click',check);
+    const item={ name, checked:false }
+    function check(e) {
+        if (!(e.toElement.localName=='input' || e.toElement.localName=='label') ) return;
+        const index=e.target.dataset.index;
+        
+        for (let i in items)
+        {
+            if(items[i].name==index)  
+                items[i].checked=!items[i].checked;
+        }
+        localStorage.setItem('items',JSON.stringify(items));   
+    }
+    function submitForm(e)
+    {
+        const item={ name, checked:false }
+        e.preventDefault();
+        if(input.value=='') return;
+        item.name=input.value;
+        items.push(item);
+        input.value='';
+        localStorage.setItem('items',JSON.stringify(items));
+        loadItems(items,list);
+    }
+    function loadItems(itemList=[],target){
+        const text=itemList.reduce((total,item) => {return total+
+       `<li>
+            <input data-index='${item.name}' type='checkbox' ${item.checked ? 'checked' : ''}></input>
+            <label>${item.name}</label>
+        </li>`},'');
+        target.innerHTML=text;
+    }
+    loadItems(items,list);
+
+</script>
+</html>
